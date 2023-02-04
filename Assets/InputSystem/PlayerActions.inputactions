@@ -72,6 +72,45 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Jump",
+            "id": "44c69cbe-37b5-4979-a902-6d4ff324c4fa",
+            "actions": [
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "962c812e-cacc-4539-9a9d-9aa4cca3b6ea",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "db5d1229-a443-4816-be35-3e2b06ff2b31",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0eb81a6a-5173-4aa4-bc86-93ac3f1db4e2",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
