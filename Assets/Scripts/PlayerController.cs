@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     
     //Raycasting and jumping
     private bool _canJump = false;
-    private Vector2 _closestPossibleJumpDir = Vector2.positiveInfinity;
+    private Vector2 _facing;
     private Dictionary<Vector2, bool> _canJumpDir;
 
     private Rigidbody2D _rb;
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        _input = _playerActions.FreeMovement.Movement.ReadValue<Vector2>();
+        ReadInput();
         CastRays();
     }
 
@@ -79,10 +79,22 @@ public class PlayerController : MonoBehaviour
         PerformMovement();
     }
 
+    private void ReadInput()
+    {
+        _input = _playerActions.FreeMovement.Movement.ReadValue<Vector2>();
+        if (Input.GetKeyDown(KeyCode.A)) _facing = Vector2.left;
+        if (Input.GetKeyDown(KeyCode.W)) _facing = Vector2.up;
+        if (Input.GetKeyDown(KeyCode.S)) _facing = Vector2.down;
+        if (Input.GetKeyDown(KeyCode.D)) _facing = Vector2.right;
+        
+        Debug.Log($"Facing dir: {_facing}");
+    }
+    
     private void SwitchArea(InputAction.CallbackContext context)
     {
         if (!_canJump) return;
-        _transform.position += (Vector3)_closestPossibleJumpDir * jumpStrength;
+        if (!_canJumpDir[_facing]) return;
+        _transform.position += (Vector3)_facing * jumpStrength;
         _currArea = _currArea == Area.GROUND ? Area.TUNNEL : Area.GROUND;
 
         switch (_currArea)
