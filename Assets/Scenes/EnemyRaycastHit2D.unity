@@ -264,6 +264,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cf67640caf547e45a5315e0f3094451, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotationSpeed: 20
+  _horizontalMovement: {x: 0, y: 0, z: 0}
 --- !u!212 &7780636
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -580,6 +582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2
   raycastLength: 0.5
+  facingRight: 1
 --- !u!1 &76155224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1270,7 +1273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  rayLength: 1
+  rayLength: 5
   floorLayer:
     serializedVersion: 2
     m_Bits: 2097152
