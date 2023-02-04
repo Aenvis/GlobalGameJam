@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 internal enum Area
@@ -22,8 +24,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float strictMovementSpeed;
     [SerializeField] private float turnSpeed;
     [SerializeField] private float jumpStrength;
-    [SerializeField] private List<GameObject> bodySegments = new List<GameObject>();
+    [SerializeField] private List<MarkerManager> bodySegments = new List<MarkerManager>();
     
+    [Header("Root form refs")]
+    [SerializeField] private Rigidbody2D headRb;
+    [SerializeField] private Collider2D headCollider;
+    [SerializeField] private Transform headTransform;
+    
+    [Header("RootMan form refs")] 
+    [SerializeField] private Rigidbody2D rootManRb;
+    [SerializeField] private Collider2D rootManCollider;
+    [SerializeField] private Transform rootManTransform;
     
     [Header("Map areas")]
     [SerializeField] private LayerMask groundLayer;
@@ -33,14 +44,16 @@ public class PlayerController : MonoBehaviour
     
     [Header("Raycasting params")]
     [SerializeField] private float rayLength;
+
+    [SerializeField] private CinemachineVirtualCamera mainCamera;
+    
+    
     
     //Raycasting and jumping 
     private bool _canJump = false;
     private Vector2 _facing;
     private Dictionary<Vector2, bool> _canJumpDir;
 
-    private Rigidbody2D _rb;
-    private Transform _transform;
     
     //input system
     private PlayerActions _playerActions;
@@ -54,12 +67,14 @@ public class PlayerController : MonoBehaviour
     
     private void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
         _playerActions = new PlayerActions();
         _playerActions.FreeMovement.Enable();
         _playerActions.Jump.Enable();
-
+        
         _playerActions.Jump.Jump.performed += SwitchArea;
+        
+        Physics2D.IgnoreCollision(headCollider, groundCollider, true);
+        Physics2D.IgnoreCollision(rootManCollider, tunnelCollider, true);
         
         _canJumpDir = new Dictionary<Vector2, bool>()
         {
@@ -69,9 +84,8 @@ public class PlayerController : MonoBehaviour
             { Vector2.right, false }
         };
 
-        _delay = .1f;
+        _delay = .05f;
         _currArea = Area.GROUND;
-        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), groundCollider, true);
     }
 
     private void Update()
@@ -92,7 +106,7 @@ public class PlayerController : MonoBehaviour
         _input = _playerActions.FreeMovement.Movement.ReadValue<Vector2>();
         if (_freeMovement)
         {
-            _facing = (transform.right);
+            _facing = (headTransform.right);
             return;
         }
         if (Input.GetKeyDown(KeyCode.A)) _facing = Vector2.left;
@@ -104,43 +118,56 @@ public class PlayerController : MonoBehaviour
     private void SwitchMovementMode()
     {
         _freeMovement = !_freeMovement;
-        _rb.gravityScale = _freeMovement ? 0.0f : 1.0f;
     }
 
     private void SwitchArea(InputAction.CallbackContext context)
     {
         if (!_canJump)  return;
-        if (!_freeMovement && !_canJumpDir[_facing]) return;
-        transform.position += (Vector3)_facing * jumpStrength;
+        if(_freeMovement)
+            headTransform.position += (Vector3)_facing * jumpStrength;
+        else rootManTransform.position += (Vector3)_facing * jumpStrength;
         _currArea = _currArea == Area.GROUND ? Area.TUNNEL : Area.GROUND;
 
         switch (_currArea)
         {
-        case Area.GROUND:  
-            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), groundCollider, true);
-            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), tunnelCollider, false);
-            transform.right = _facing;
-            if (_facing == Vector2.left) transform.Rotate(180.0f, 0.0f, 0.0f);
+        case Area.GROUND:
+            headTransform.position = rootManTransform.position;
+            rootManTransform.gameObject.SetActive(false);
+            foreach (var segment in bodySegments)
+            {
+                segment.gameObject.SetActive(true);
+            }
+            Physics2D.IgnoreCollision(headCollider, groundCollider, true);
+            mainCamera.LookAt = headTransform;
+            mainCamera.Follow = headTransform;
+            headTransform.right = _facing;
+            if (_facing == Vector2.left) headTransform.Rotate(180.0f, 0.0f, 0.0f);
             break;
         case Area.TUNNEL:
-            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), groundCollider, false);
-            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), tunnelCollider, true);
-            transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+            rootManTransform.position = headTransform.position;
+            rootManTransform.gameObject.SetActive(true);
+            foreach (var segment in bodySegments)
+            {
+                segment.gameObject.SetActive(false);
+            }
+            Physics2D.IgnoreCollision(rootManCollider, tunnelCollider, true);
+            mainCamera.LookAt = rootManTransform;
+            mainCamera.Follow = rootManTransform;
             break;
         default:
             throw new ArgumentOutOfRangeException();
         }
-        
         SwitchMovementMode();
     }
 
-    private RaycastHit2D CastRay(Vector2 dir)
+    private RaycastHit2D CastRay(Transform formTransform, Vector2 dir)
     {
-       RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, rayLength, _currArea == Area.GROUND ? tunnelLayer : groundLayer);
+       RaycastHit2D hit = Physics2D.Raycast(formTransform.position, dir, rayLength, _freeMovement ? tunnelLayer : groundLayer);
        if (hit.collider is not null)
        {
+           Debug.Log("HIT");
            _canJump = true;
-           Debug.DrawLine(transform.position, hit.point, Color.red);
+           Debug.DrawLine(formTransform.position, hit.point, Color.red);
        }
        
        if(!_freeMovement)
@@ -153,16 +180,16 @@ public class PlayerController : MonoBehaviour
     {
         if (_freeMovement)
         {
-            RaycastHit2D forwardHit = CastRay(transform.right);
+            RaycastHit2D forwardHit = CastRay(headTransform, headTransform.right);
             if (forwardHit.collider is not null) return;
             _canJump = false;
         }
         else
         {
-            RaycastHit2D rightHit = CastRay(Vector2.right);
-            RaycastHit2D leftHit = CastRay(Vector2.left);
-            RaycastHit2D upHit = CastRay(Vector2.up);
-            RaycastHit2D downHit = CastRay(Vector2.down);
+            RaycastHit2D rightHit = CastRay(rootManTransform ,Vector2.right);
+            RaycastHit2D leftHit = CastRay(rootManTransform, Vector2.left);
+            RaycastHit2D upHit = CastRay(rootManTransform, Vector2.up);
+            RaycastHit2D downHit = CastRay(rootManTransform, Vector2.down);
             //if nothing is hit
             if (rightHit.collider is not null || leftHit.collider is not null || upHit.collider is not null ||
                 downHit.collider is not null) return;
@@ -174,19 +201,22 @@ public class PlayerController : MonoBehaviour
     {
         if (_freeMovement)
         {
-            _rb.velocity = transform.right * (freeMovementSpeed * Time.fixedDeltaTime);
-            transform.Rotate(new Vector3(0, 0, -turnSpeed * Time.fixedDeltaTime * _input.x));
+            headRb.velocity = headTransform.right * (freeMovementSpeed * Time.fixedDeltaTime);
+            headTransform.Rotate(new Vector3(0, 0, -turnSpeed * Time.fixedDeltaTime * _input.x));
         }
         else
-            _rb.velocity = new Vector2(_input.x * strictMovementSpeed, _rb.velocity.y);
-        
+        {
+            rootManRb.velocity = new Vector2(_input.x * strictMovementSpeed, rootManRb.velocity.y);
+        }
+
         if (_delay > 0.0f) return;
+        if (!_freeMovement) return;
         for (var i = 1; i < bodySegments.Count; i++)
         {
-            MarkerManager marker = bodySegments[i - 1].GetComponent<MarkerManager>();
-            bodySegments[i].transform.position = marker.GetMarkers()[0].Position;
-            bodySegments[i].transform.rotation = marker.GetMarkers()[0].Rotation;
-            marker.GetMarkers().RemoveAt(0);
+            MarkerManager markerManager = bodySegments[i - 1];
+            bodySegments[i].gameObject.transform.position = markerManager.GetMarkers()[0].Position;
+            bodySegments[i].gameObject.transform.rotation = markerManager.GetMarkers()[0].Rotation;
+            markerManager.GetMarkers().RemoveAt(0);
         }
     }
 }
