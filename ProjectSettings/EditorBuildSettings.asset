@@ -8,4 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: f945c7f29d7c8684e97f04344aab5371
+  - enabled: 1
+    path: Assets/Scenes/equipmentBartek.unity
+    guid: a58d40e702e7f6f49b2db370cf980443
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: b823947a80c30a4419340ee4f0092600
   m_configObjects: {}
