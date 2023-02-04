@@ -94,6 +94,45 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Jump"",
+            ""id"": ""44c69cbe-37b5-4979-a902-6d4ff324c4fa"",
+            ""actions"": [
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""962c812e-cacc-4539-9a9d-9aa4cca3b6ea"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""db5d1229-a443-4816-be35-3e2b06ff2b31"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0eb81a6a-5173-4aa4-bc86-93ac3f1db4e2"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -101,6 +140,9 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         // FreeMovement
         m_FreeMovement = asset.FindActionMap("FreeMovement", throwIfNotFound: true);
         m_FreeMovement_Movement = m_FreeMovement.FindAction("Movement", throwIfNotFound: true);
+        // Jump
+        m_Jump = asset.FindActionMap("Jump", throwIfNotFound: true);
+        m_Jump_Jump = m_Jump.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -189,8 +231,45 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         }
     }
     public FreeMovementActions @FreeMovement => new FreeMovementActions(this);
+
+    // Jump
+    private readonly InputActionMap m_Jump;
+    private IJumpActions m_JumpActionsCallbackInterface;
+    private readonly InputAction m_Jump_Jump;
+    public struct JumpActions
+    {
+        private @PlayerActions m_Wrapper;
+        public JumpActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Jump => m_Wrapper.m_Jump_Jump;
+        public InputActionMap Get() { return m_Wrapper.m_Jump; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(JumpActions set) { return set.Get(); }
+        public void SetCallbacks(IJumpActions instance)
+        {
+            if (m_Wrapper.m_JumpActionsCallbackInterface != null)
+            {
+                @Jump.started -= m_Wrapper.m_JumpActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_JumpActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_JumpActionsCallbackInterface.OnJump;
+            }
+            m_Wrapper.m_JumpActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+            }
+        }
+    }
+    public JumpActions @Jump => new JumpActions(this);
     public interface IFreeMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
+    }
+    public interface IJumpActions
+    {
+        void OnJump(InputAction.CallbackContext context);
     }
 }
