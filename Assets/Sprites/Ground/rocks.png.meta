@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9c2343c2a4fb3f44d830cf58c616a45c
+guid: 5edd3cc2f868b61499622e34d2a9d964
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -106,7 +106,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sky_0
+      name: rocks_0
       rect:
         serializedVersion: 2
         x: 0
@@ -120,14 +120,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 37796822cc33e774fadc02c2be2a49ce
-      internalID: 449372635
+      spriteID: a5bca9aa6e882c14c8c4b4393cf6ee5c
+      internalID: 551195019
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sky_1
+      name: rocks_1
       rect:
         serializedVersion: 2
         x: 32
@@ -141,14 +141,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 18f19f27cfd98da41bc4a86d1b0327d2
-      internalID: 1266787629
+      spriteID: bb03713d3d16fee488bc314b7826ab5b
+      internalID: 1341204643
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sky_2
+      name: rocks_2
       rect:
         serializedVersion: 2
         x: 64
@@ -162,14 +162,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 34c08e67a201af5499f117961927813e
-      internalID: 803450401
+      spriteID: b86d6f8abe1a32e49bb4643d19b7da40
+      internalID: 746499032
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sky_3
+      name: rocks_3
       rect:
         serializedVersion: 2
         x: 96
@@ -183,8 +183,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d80463c5f11d40548a220bbab1af50c9
-      internalID: 277171589
+      spriteID: 59faa4bacb80d2840949af34633d5dad
+      internalID: 1405962675
       vertices: []
       indices: 
       edges: []
@@ -200,10 +200,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Sky_1: 1266787629
-      Sky_3: 277171589
-      Sky_0: 449372635
-      Sky_2: 803450401
+      rocks_0: 551195019
+      rocks_2: 746499032
+      rocks_1: 1341204643
+      rocks_3: 1405962675
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 
