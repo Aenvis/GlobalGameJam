@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -13,6 +14,7 @@ internal enum Area
     GROUND = 0,
     TUNNEL
 }
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement physics")]
@@ -33,14 +35,15 @@ public class PlayerController : MonoBehaviour
     //Raycasting and jumping
     private bool _canJump = false;
     private Vector2 _closestPossibleJumpDir = Vector2.positiveInfinity;
-    
+    private Dictionary<Vector2, bool> _canJumpDir;
+
     private Rigidbody2D _rb;
     private Transform _transform;
     
     //input system
     private PlayerActions _playerActions;
     private Vector2 _input;
-
+    
     private Area _currArea;
     
     private void Start()
@@ -52,6 +55,14 @@ public class PlayerController : MonoBehaviour
         _playerActions.Jump.Enable();
 
         _playerActions.Jump.Jump.performed += SwitchArea;
+        
+        _canJumpDir = new Dictionary<Vector2, bool>()
+        {
+            { Vector2.up, false },
+            { Vector2.down, false },
+            { Vector2.left, false },
+            { Vector2.right, false }
+        };
         
         _currArea = Area.GROUND;
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), groundCollider, true);
@@ -91,46 +102,32 @@ public class PlayerController : MonoBehaviour
 
     private RaycastHit2D CastRay(Vector2 dir)
     {
-       return Physics2D.Raycast(transform.position, dir, rayLength, _currArea == Area.GROUND ? tunnelLayer : groundLayer);
+       RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, rayLength, _currArea == Area.GROUND ? tunnelLayer : groundLayer);
+       if (hit.collider is not null)
+       {
+           _canJump = true;
+           Debug.DrawLine(transform.position, hit.point, Color.red);
+       }
+       
+       _canJumpDir[dir] = hit.collider;
+       return hit;
     }
 
-    private void CheckRay(RaycastHit2D ray)
-    {
-        if (ray.collider is null) return;
-        
-        _canJump = true;
-        // comapare if ray hit is closer than the actual closest hit point, if yes then overwrite 
-        if (Vector2.Distance(transform.position, ray.point) <
-            Vector2.Distance(transform.position, _closestPossibleJumpDir))
-            _closestPossibleJumpDir = ((Vector3)ray.point - transform.position).normalized;
-            
-        Debug.DrawLine(transform.position, ray.point, Color.red);
-    }
-    
     private void CastRays()
     {
-        _canJump = false;
         RaycastHit2D rightHit = CastRay(Vector2.right);
-        CheckRay(rightHit);
-
         // Cast a ray to the left
-        RaycastHit2D leftHit = CastRay(-Vector2.right);
-        CheckRay(leftHit);
-
+        RaycastHit2D leftHit = CastRay(Vector2.left);
         // Cast a ray up
         RaycastHit2D upHit = CastRay(Vector2.up);
-        CheckRay(upHit);
-
         // Cast a ray down
         RaycastHit2D downHit = CastRay(Vector2.down);
-        CheckRay(downHit);
-        
+
         //if nothing is hit
-        if (rightHit.collider is null && leftHit.collider is null && upHit.collider is null && downHit.collider is null)
-        {
-            _canJump = false;
-            _closestPossibleJumpDir = Vector2.positiveInfinity;
-        }
+        if (rightHit.collider is not null || leftHit.collider is not null || upHit.collider is not null ||
+            downHit.collider is not null) return;
+        
+        _canJump = false;
     }
     
     private void PerformMovement()
