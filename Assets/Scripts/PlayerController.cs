@@ -46,6 +46,9 @@ public class PlayerController : MonoBehaviour
     private PlayerActions _playerActions;
     private Vector2 _input;
     private bool _freeMovement = true;
+
+    //delay between head and body
+    private float _delay;
     
     private Area _currArea;
     
@@ -65,7 +68,8 @@ public class PlayerController : MonoBehaviour
             { Vector2.left, false },
             { Vector2.right, false }
         };
-        
+
+        _delay = .1f;
         _currArea = Area.GROUND;
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), groundCollider, true);
     }
@@ -74,6 +78,8 @@ public class PlayerController : MonoBehaviour
     {
         ReadInput();
         CastRays();
+
+        if(_delay > 0f)_delay -= Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -103,8 +109,8 @@ public class PlayerController : MonoBehaviour
 
     private void SwitchArea(InputAction.CallbackContext context)
     {
-        if (!_canJump || !_canJumpDir[_facing])  return;
-        
+        if (!_canJump)  return;
+        if (!_freeMovement && !_canJumpDir[_facing]) return;
         transform.position += (Vector3)_facing * jumpStrength;
         _currArea = _currArea == Area.GROUND ? Area.TUNNEL : Area.GROUND;
 
@@ -137,7 +143,9 @@ public class PlayerController : MonoBehaviour
            Debug.DrawLine(transform.position, hit.point, Color.red);
        }
        
-       _canJumpDir[dir] = hit.collider;
+       if(!_freeMovement)
+        _canJumpDir[dir] = hit.collider;
+       
        return hit;
     }
 
@@ -171,5 +179,14 @@ public class PlayerController : MonoBehaviour
         }
         else
             _rb.velocity = new Vector2(_input.x * strictMovementSpeed, _rb.velocity.y);
+        
+        if (_delay > 0.0f) return;
+        for (var i = 1; i < bodySegments.Count; i++)
+        {
+            MarkerManager marker = bodySegments[i - 1].GetComponent<MarkerManager>();
+            bodySegments[i].transform.position = marker.GetMarkers()[0].Position;
+            bodySegments[i].transform.rotation = marker.GetMarkers()[0].Rotation;
+            marker.GetMarkers().RemoveAt(0);
+        }
     }
 }
