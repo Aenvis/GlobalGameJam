@@ -17,7 +17,7 @@ public abstract class Enemy
 
     public abstract void Move();
 
-    public virtual void Update()
+    public  void FixedUpdate()
     {
         if (life <= 0)
         {

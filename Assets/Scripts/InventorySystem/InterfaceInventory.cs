@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class InventoryUI : MonoBehaviour
+public class InterfaceInventory : MonoBehaviour
 {
     private bool showInventory = false;
     private Inventory inventory;
@@ -31,17 +31,30 @@ public class InventoryUI : MonoBehaviour
     private void OnGUI()
     {
         if (showInventory)
-        {
-            int x = 10;
-            int y = 10;
-            int padding = 5;
-            int size = 50;
+        {   
+            Debug.Log("OnGUI");
 
-            for (int i = 0; i < inventory.items.Count; i++)
+            float x = 70;
+            float y = Screen.height / 4f;
+            float padding = 5;
+            float size = 50;
+            
+            GUI.backgroundColor = Color.yellow;
+            
+            bool isButtonCliced = GUI.Button(new Rect(x, y, 100f, 30f), "Button");
+            if (isButtonCliced == true)
+            {
+                Debug.Log("IsButtonCliced");
+            }
+            
+
+            for (int i = -0; i < inventory.items.Count; i++)
             {
                 GUI.DrawTexture(new Rect(x, y, size, size), itemTextures[i]);
                 x += size + padding;
+                
             }
+            
         }
     }
 }
