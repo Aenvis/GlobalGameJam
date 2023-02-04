@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,22 @@ public class InterfaceInventory : MonoBehaviour
 {
     private bool showInventory = false;
     private Inventory inventory;
-    private List<Texture2D> itemTextures;
+    [SerializeField] List<Texture2D> itemTextures;
+    public static InterfaceInventory Instance;
+    private void Awake() 
+    { 
+        // If there is an instance, and it's not me, delete myself.
 
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(this); 
+        } 
+        else 
+        { 
+            Instance = this; 
+        } 
+    }
+    
     private void Start()
     {
         inventory = GetComponent<Inventory>();
@@ -28,6 +43,12 @@ public class InterfaceInventory : MonoBehaviour
         }
     }
 
+    public void AddItem(Item item)
+    {
+        inventory.AddItem(item);
+    }
+
+    
     private void OnGUI()
     {
         if (showInventory)
@@ -48,7 +69,7 @@ public class InterfaceInventory : MonoBehaviour
             }
             
 
-            for (int i = -0; i < inventory.items.Count; i++)
+            for (int i = 0; i < inventory.items.Count; i++)
             {
                 GUI.DrawTexture(new Rect(x, y, size, size), itemTextures[i]);
                 x += size + padding;

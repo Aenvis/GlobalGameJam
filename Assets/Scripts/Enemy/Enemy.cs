@@ -1,23 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public abstract class Enemy
+public abstract class Enemy : MonoBehaviour
 {
-    protected string name;
+    protected string enemyName;
     protected int life;
-    protected Inventory itemDrops;
+    protected Item drop;
 
-    public Enemy(string name, int life)
+    protected virtual void Start()
     {
-        this.name = name;
-        this.life = life;
-        itemDrops = new Inventory();
+        FillItem();
     }
+    protected abstract void FillItem();
 
-    public abstract void Move();
-
-    public  void FixedUpdate()
+    public void FixedUpdate()
     {
         if (life <= 0)
         {
@@ -32,12 +31,8 @@ public abstract class Enemy
 
     public void DropItems()
     {
-        // Code to drop items when the enemy dies
+        InterfaceInventory.Instance.AddItem(drop);
     }
 
-    public Inventory GetItemDrops()
-    {
-        return itemDrops;
-    }
 }
 
