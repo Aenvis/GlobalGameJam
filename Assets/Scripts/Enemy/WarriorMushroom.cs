@@ -4,13 +4,13 @@ using UnityEngine;
 
 using UnityEngine;
 
-public class Warrior : Enemy
+public class WarriorMushroom : Enemy
 {
-    public Warrior(string name, int life) : base(name, life)
+    public WarriorMushroom(string name, int life) : base(name, life)
     {
         name = "Warrior Mushroom";
         life = 20;
-        itemDrops.AddItem(new Item("Grzybnia", 1, 1));
+        itemDrops.AddItem(new Item("Grzybnia", 10, 1));
     }
 
     public override void Move()

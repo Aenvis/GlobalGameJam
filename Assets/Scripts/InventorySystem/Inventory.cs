@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory
 {
-    private List<Item> items;
+    public List<Item> items;
 
     public Inventory()
     {
