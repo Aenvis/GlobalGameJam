@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
     private bool _freeMovement = true;
 
     //delay between head and body
-    private float _delay;
+    private float _delay = .0f;
     
     private Area _currArea;
     
@@ -83,8 +83,7 @@ public class PlayerController : MonoBehaviour
             { Vector2.left, false },
             { Vector2.right, false }
         };
-
-        _delay = .05f;
+        
         _currArea = Area.GROUND;
     }
 
@@ -125,7 +124,10 @@ public class PlayerController : MonoBehaviour
         if (!_canJump)  return;
         if(_freeMovement)
             headTransform.position += (Vector3)_facing * jumpStrength;
-        else rootManTransform.position += (Vector3)_facing * jumpStrength;
+        else if (!_freeMovement && _canJumpDir[_facing])
+            rootManTransform.position += (Vector3)_facing * jumpStrength;
+        else return;
+        
         _currArea = _currArea == Area.GROUND ? Area.TUNNEL : Area.GROUND;
 
         switch (_currArea)
@@ -165,7 +167,6 @@ public class PlayerController : MonoBehaviour
        RaycastHit2D hit = Physics2D.Raycast(formTransform.position, dir, rayLength, _freeMovement ? tunnelLayer : groundLayer);
        if (hit.collider is not null)
        {
-           Debug.Log("HIT");
            _canJump = true;
            Debug.DrawLine(formTransform.position, hit.point, Color.red);
        }

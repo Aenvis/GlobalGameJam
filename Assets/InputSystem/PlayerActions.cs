@@ -112,17 +112,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""db5d1229-a443-4816-be35-3e2b06ff2b31"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Jump"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""0eb81a6a-5173-4aa4-bc86-93ac3f1db4e2"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
@@ -131,78 +120,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""StrictMovement"",
-            ""id"": ""63150996-2c5c-46e7-8655-b12295987e29"",
-            ""actions"": [
-                {
-                    ""name"": ""Movement"",
-                    ""type"": ""Value"",
-                    ""id"": ""4369e547-7b37-4286-9ea7-9fe97de4ee48"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""9e671928-841c-43ec-99b3-061de5f9dd5f"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""f0154b97-d944-4fdb-ab57-78ae4ff04d83"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""bc7469e7-2e58-42f9-8207-5313430a6b3c"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""b5eb099f-f44f-4e44-b8a0-bfa81c67c688"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""db562696-383f-4613-af89-6040ea51e51f"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -215,9 +132,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         // Jump
         m_Jump = asset.FindActionMap("Jump", throwIfNotFound: true);
         m_Jump_Jump = m_Jump.FindAction("Jump", throwIfNotFound: true);
-        // StrictMovement
-        m_StrictMovement = asset.FindActionMap("StrictMovement", throwIfNotFound: true);
-        m_StrictMovement_Movement = m_StrictMovement.FindAction("Movement", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,39 +253,6 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         }
     }
     public JumpActions @Jump => new JumpActions(this);
-
-    // StrictMovement
-    private readonly InputActionMap m_StrictMovement;
-    private IStrictMovementActions m_StrictMovementActionsCallbackInterface;
-    private readonly InputAction m_StrictMovement_Movement;
-    public struct StrictMovementActions
-    {
-        private @PlayerActions m_Wrapper;
-        public StrictMovementActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Movement => m_Wrapper.m_StrictMovement_Movement;
-        public InputActionMap Get() { return m_Wrapper.m_StrictMovement; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(StrictMovementActions set) { return set.Get(); }
-        public void SetCallbacks(IStrictMovementActions instance)
-        {
-            if (m_Wrapper.m_StrictMovementActionsCallbackInterface != null)
-            {
-                @Movement.started -= m_Wrapper.m_StrictMovementActionsCallbackInterface.OnMovement;
-                @Movement.performed -= m_Wrapper.m_StrictMovementActionsCallbackInterface.OnMovement;
-                @Movement.canceled -= m_Wrapper.m_StrictMovementActionsCallbackInterface.OnMovement;
-            }
-            m_Wrapper.m_StrictMovementActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Movement.started += instance.OnMovement;
-                @Movement.performed += instance.OnMovement;
-                @Movement.canceled += instance.OnMovement;
-            }
-        }
-    }
-    public StrictMovementActions @StrictMovement => new StrictMovementActions(this);
     public interface IFreeMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -379,9 +260,5 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     public interface IJumpActions
     {
         void OnJump(InputAction.CallbackContext context);
-    }
-    public interface IStrictMovementActions
-    {
-        void OnMovement(InputAction.CallbackContext context);
     }
 }
