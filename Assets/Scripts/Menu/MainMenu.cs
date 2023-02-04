@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    bool isPaused = false;
     public void PlayGame()
     {
         SceneManager.LoadScene("equipmentBartek");
@@ -26,7 +27,25 @@ public class MainMenu : MonoBehaviour
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
         }
+        
+        if (Input.GetKeyDown((KeyCode.P))) isPaused = !isPaused;
+        if(isPaused)
+        {
+            Debug.Log("Pausa");
+            isPaused = true;
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Debug.Log("Nie ma pausy");
+            isPaused = false;
+            Time.timeScale = 1f;
+        }
+            
+
     }
     
     
 }
+    
+
