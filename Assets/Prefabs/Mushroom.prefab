@@ -37,7 +37,7 @@ Transform:
   - {fileID: 7672420816957177999}
   - {fileID: 7672420817774675602}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7672420816695093723
 SpriteRenderer:
@@ -132,7 +132,6 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 256
-  tunnelCollider: {fileID: 0}
   shroomAnimator: {fileID: 7672420816695093713}
 --- !u!61 &7672420816695093718
 BoxCollider2D:
@@ -197,6 +196,18 @@ MonoBehaviour:
   deathEffect:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: KillEnemy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 7672420816695093719}
         m_TargetAssemblyTypeName: HorizontalEnemyMovement, Assembly-CSharp
         m_MethodName: Die

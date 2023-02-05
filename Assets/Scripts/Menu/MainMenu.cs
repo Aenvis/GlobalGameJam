@@ -8,7 +8,7 @@ public class MainMenu : MonoBehaviour
     bool isPaused = false;
     public void PlayGame()
     {
-        SceneManager.LoadScene("equipmentBartek");
+        SceneManager.LoadScene("Environment 1107");
     }
 
     public void OpenCredits()
