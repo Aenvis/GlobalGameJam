@@ -96,7 +96,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(_attackAnimationPauseTime);
         if (_attackAnimationPauseTime > 0f)
         {
             rootManRb.velocity = Vector3.zero;
