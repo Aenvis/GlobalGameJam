@@ -5,27 +5,28 @@ using UnityEngine;
 
 public class HorizontalEnemyMovement : MonoBehaviour
 {
-    [SerializeField] private float speed = 8;
-    [SerializeField] private float rayLength = 5.0f;
+    [SerializeField] private float speed;
+    [SerializeField] private float rayLength;
     [SerializeField] private LayerMask floorLayer;
-    private bool facingRight = true;
     
+    private bool _facingRight = true;
+    private Vector2 _lookAt;
     
-
-    private void FixedUpdate()
+    private void Update()
     {
-        Vector2 direction = facingRight ? new (3f, -0.4f) : new (-3f, -0.4f);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, rayLength, floorLayer);
+        _lookAt = _facingRight ? new (1f, -0.4f) : new (-1f, -0.4f);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, _lookAt, rayLength, floorLayer);
 
         if (hit.collider is null)
         {
-            facingRight = !facingRight;
-        }
-
-        transform.Translate(direction * speed * Time.deltaTime);
-        
+            _facingRight = !_facingRight;
+        }    
         
         Debug.DrawLine(transform.position, hit.point, Color.yellow);
-        
+    }
+
+    private void FixedUpdate()
+    {
+        transform.Translate((_facingRight ? Vector3.right : Vector3.left) * (speed * Time.deltaTime));
     }
 }
