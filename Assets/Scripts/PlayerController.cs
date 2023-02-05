@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask tunnelLayer;
     [SerializeField] private Collider2D groundCollider;
     [SerializeField] private Collider2D tunnelCollider;
+    [SerializeField] private Collider2D floorCollider;
     
     [Header("Raycasting params")]
     [SerializeField] private float rayLength;
@@ -82,6 +83,8 @@ public class PlayerController : MonoBehaviour
         
         Physics2D.IgnoreCollision(headCollider, groundCollider, true);
         Physics2D.IgnoreCollision(rootManCollider, tunnelCollider, true);
+        Physics2D.IgnoreCollision(rootManCollider, floorCollider, true);
+        Physics2D.IgnoreCollision(headCollider, floorCollider, true);
         
         _canJumpDir = new Dictionary<Vector2, bool>()
         {
@@ -168,6 +171,7 @@ public class PlayerController : MonoBehaviour
                 segment.gameObject.SetActive(true);
             }
             Physics2D.IgnoreCollision(headCollider, groundCollider, true);
+            Physics2D.IgnoreCollision(headCollider, floorCollider, true);
             mainCamera.LookAt = headTransform;
             mainCamera.Follow = headTransform;
             StartCoroutine(InterpolateCameraSize(12f));
@@ -182,6 +186,7 @@ public class PlayerController : MonoBehaviour
                 segment.gameObject.SetActive(false);
             }
             Physics2D.IgnoreCollision(rootManCollider, tunnelCollider, true);
+            Physics2D.IgnoreCollision(rootManCollider, floorCollider, true);
             mainCamera.LookAt = rootManTransform;
             mainCamera.Follow = rootManTransform;
             StartCoroutine(InterpolateCameraSize(7f));
