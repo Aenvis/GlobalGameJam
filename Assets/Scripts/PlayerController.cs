@@ -8,6 +8,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
@@ -277,4 +278,12 @@ public class PlayerController : MonoBehaviour
             markerManager.GetMarkers().RemoveAt(0);
         }
     }
+
+    public void Die()
+    {
+        Destroy(rootManTransform.gameObject, 0.4f);
+        SceneManager.LoadScene("Menu");
+    }
+    
+    
 }
