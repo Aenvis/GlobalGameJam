@@ -10,7 +10,6 @@ public class HorizontalEnemyMovement : MonoBehaviour
     [SerializeField] private float rayLength = 5f;
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private LayerMask playerLayer;
-    [SerializeField] [CanBeNull] private Collider2D tunnelCollider;
     [SerializeField] private Animator shroomAnimator;
     
     private bool _facingRight = true;
@@ -18,14 +17,9 @@ public class HorizontalEnemyMovement : MonoBehaviour
     private bool _performAttack = false;
     private float _attackCountdown = 0f;
     private float _attackCooldown = 0f;
-    private float _attackCooldownMax = 4f;
+    private float _attackCooldownMax = 1f;
     
     private Vector2 _lookAt;
-    
-    private void Start()
-    {
-        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), tunnelCollider);
-    }
 
     private void Update()
     {
