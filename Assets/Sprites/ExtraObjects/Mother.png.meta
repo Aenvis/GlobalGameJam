@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5edd3cc2f868b61499622e34d2a9d964
+guid: 5550365f3405b8042b3d3580f0b10aa5
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 4
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -68,7 +68,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 128
+    maxTextureSize: 512
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -106,85 +106,64 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: rocks_0
+      name: Mother_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 32
-        height: 32
+        y: 320
+        width: 160
+        height: 158
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a5bca9aa6e882c14c8c4b4393cf6ee5c
-      internalID: 551195019
+      spriteID: d283d4c3e6187e24085c93e16cb128b3
+      internalID: 1023768185
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rocks_1
+      name: Mother_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 0
-        width: 32
-        height: 32
+        x: 0
+        y: 160
+        width: 160
+        height: 160
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bb03713d3d16fee488bc314b7826ab5b
-      internalID: 1341204643
+      spriteID: d9d8296e98d4bd242835841fc9be4045
+      internalID: 1708131734
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rocks_2
+      name: Mother_2
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 32
-        height: 32
+        x: 0
+        y: 1
+        width: 160
+        height: 156
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b86d6f8abe1a32e49bb4643d19b7da40
-      internalID: 746499032
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: rocks_3
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 59faa4bacb80d2840949af34633d5dad
-      internalID: 1405962675
+      spriteID: 24fc32b33d90fe44fb7f696975140bbf
+      internalID: -2067308267
       vertices: []
       indices: 
       edges: []
@@ -200,10 +179,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      rocks_0: 551195019
-      rocks_2: 746499032
-      rocks_1: 1341204643
-      rocks_3: 1405962675
+      Mother_1: 1708131734
+      Mother_2: -2067308267
+      Mother_0: 1023768185
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 
