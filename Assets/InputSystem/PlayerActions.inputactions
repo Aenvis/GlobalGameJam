@@ -74,13 +74,22 @@
             ]
         },
         {
-            "name": "Jump",
+            "name": "Interactions",
             "id": "44c69cbe-37b5-4979-a902-6d4ff324c4fa",
             "actions": [
                 {
                     "name": "Jump",
                     "type": "Button",
                     "id": "962c812e-cacc-4539-9a9d-9aa4cca3b6ea",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "bbbe35fe-ff94-4df8-aba6-d4e12f43bb32",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -96,6 +105,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "14b46848-738e-4baa-bd83-708bf80332ac",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

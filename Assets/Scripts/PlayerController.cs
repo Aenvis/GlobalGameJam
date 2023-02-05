@@ -44,16 +44,22 @@ public class PlayerController : MonoBehaviour
     
     [Header("Raycasting params")]
     [SerializeField] private float rayLength;
-
+    
+    [Header("Others")]
     [SerializeField] private CinemachineVirtualCamera mainCamera;
     
-    
+    [Header("Animations")]
+    [SerializeField] private Animator rootManAnimator;
+
+    //time for which every action is being stopped until attack animation ends
+    private float _attackAnimationPauseTime = 0f;
+    private float _attackCooldown = 0f;
+    private const float AttackCooldownMax = 0.75f;
     
     //Raycasting and jumping 
     private bool _canJump = false;
     private Vector2 _facing;
     private Dictionary<Vector2, bool> _canJumpDir;
-
     
     //input system
     private PlayerActions _playerActions;
@@ -61,7 +67,7 @@ public class PlayerController : MonoBehaviour
     private bool _freeMovement = true;
 
     //delay between head and body
-    private float _delay = .0f;
+    private float _delay = 0f;
     
     private Area _currArea;
     
@@ -69,9 +75,10 @@ public class PlayerController : MonoBehaviour
     {
         _playerActions = new PlayerActions();
         _playerActions.FreeMovement.Enable();
-        _playerActions.Jump.Enable();
+        _playerActions.Interactions.Enable();
         
-        _playerActions.Jump.Jump.performed += SwitchArea;
+        _playerActions.Interactions.Jump.performed += SwitchArea;
+        _playerActions.Interactions.Attack.performed += PerformAttack;
         
         Physics2D.IgnoreCollision(headCollider, groundCollider, true);
         Physics2D.IgnoreCollision(rootManCollider, tunnelCollider, true);
@@ -89,9 +96,19 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(_attackAnimationPauseTime);
+        if (_attackAnimationPauseTime > 0f)
+        {
+            rootManRb.velocity = Vector3.zero;
+            _attackAnimationPauseTime -= Time.deltaTime;
+            return;
+        }
+
+        if (_attackCooldown > 0f) _attackCooldown -= Time.deltaTime;
+        
         ReadInput();
         CastRays();
-
+        ManageAnimations();
         if(_delay > 0f)_delay -= Time.deltaTime;
     }
 
@@ -119,11 +136,23 @@ public class PlayerController : MonoBehaviour
         _freeMovement = !_freeMovement;
     }
 
+    private void ManageAnimations()
+    {
+        if(_freeMovement) return;
+        float epsilon = 0.05f;
+        if (Math.Abs(_input.x - 1) < epsilon) rootManTransform.localScale = new Vector3(1, rootManTransform.localScale.y, rootManTransform.localScale.z);
+        else if (Math.Abs(_input.x - (-1)) < epsilon) rootManTransform.localScale = new Vector3(-1, rootManTransform.localScale.y, rootManTransform.localScale.z);
+
+        if (Mathf.Abs(_input.x) >= 0.05f)
+            rootManAnimator.Play("RootManWalk");
+        else rootManAnimator.Play("RootMan");
+    }
+    
     private void SwitchArea(InputAction.CallbackContext context)
     {
         if (!_canJump)  return;
         if(_freeMovement)
-            headTransform.position += (Vector3)_facing * jumpStrength;
+            headTransform.position += (Vector3)_facing * (3f * jumpStrength);
         else if (!_freeMovement && _canJumpDir[_facing])
             rootManTransform.position += (Vector3)_facing * jumpStrength;
         else return;
@@ -142,6 +171,7 @@ public class PlayerController : MonoBehaviour
             Physics2D.IgnoreCollision(headCollider, groundCollider, true);
             mainCamera.LookAt = headTransform;
             mainCamera.Follow = headTransform;
+            StartCoroutine(InterpolateCameraSize(12f));
             headTransform.right = _facing;
             if (_facing == Vector2.left) headTransform.Rotate(180.0f, 0.0f, 0.0f);
             break;
@@ -155,6 +185,7 @@ public class PlayerController : MonoBehaviour
             Physics2D.IgnoreCollision(rootManCollider, tunnelCollider, true);
             mainCamera.LookAt = rootManTransform;
             mainCamera.Follow = rootManTransform;
+            StartCoroutine(InterpolateCameraSize(7f));
             break;
         default:
             throw new ArgumentOutOfRangeException();
@@ -162,9 +193,31 @@ public class PlayerController : MonoBehaviour
         SwitchMovementMode();
     }
 
+    private IEnumerator InterpolateCameraSize(float target)
+    {
+        const float duration = 0.65f;
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+            mainCamera.m_Lens.OrthographicSize = Mathf.Lerp(mainCamera.m_Lens.OrthographicSize, target, t);
+            yield return null;
+        }
+    }
+
+    private void PerformAttack(InputAction.CallbackContext context)
+    {
+        if (_freeMovement) return;
+
+        rootManAnimator.Play("RootManAttack");
+        _attackCooldown = AttackCooldownMax;
+        _attackAnimationPauseTime = 0.27f;
+    }
+    
     private RaycastHit2D CastRay(Transform formTransform, Vector2 dir)
     {
-       RaycastHit2D hit = Physics2D.Raycast(formTransform.position, dir, rayLength, _freeMovement ? tunnelLayer : groundLayer);
+       RaycastHit2D hit = Physics2D.Raycast(formTransform.position, dir, _freeMovement ? 3 * rayLength : rayLength, _freeMovement ? tunnelLayer : groundLayer);
        if (hit.collider is not null)
        {
            _canJump = true;

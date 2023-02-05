@@ -96,13 +96,22 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Jump"",
+            ""name"": ""Interactions"",
             ""id"": ""44c69cbe-37b5-4979-a902-6d4ff324c4fa"",
             ""actions"": [
                 {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""962c812e-cacc-4539-9a9d-9aa4cca3b6ea"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""bbbe35fe-ff94-4df8-aba6-d4e12f43bb32"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -120,6 +129,17 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""14b46848-738e-4baa-bd83-708bf80332ac"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -129,9 +149,10 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
         // FreeMovement
         m_FreeMovement = asset.FindActionMap("FreeMovement", throwIfNotFound: true);
         m_FreeMovement_Movement = m_FreeMovement.FindAction("Movement", throwIfNotFound: true);
-        // Jump
-        m_Jump = asset.FindActionMap("Jump", throwIfNotFound: true);
-        m_Jump_Jump = m_Jump.FindAction("Jump", throwIfNotFound: true);
+        // Interactions
+        m_Interactions = asset.FindActionMap("Interactions", throwIfNotFound: true);
+        m_Interactions_Jump = m_Interactions.FindAction("Jump", throwIfNotFound: true);
+        m_Interactions_Attack = m_Interactions.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -221,44 +242,53 @@ public partial class @PlayerActions : IInputActionCollection2, IDisposable
     }
     public FreeMovementActions @FreeMovement => new FreeMovementActions(this);
 
-    // Jump
-    private readonly InputActionMap m_Jump;
-    private IJumpActions m_JumpActionsCallbackInterface;
-    private readonly InputAction m_Jump_Jump;
-    public struct JumpActions
+    // Interactions
+    private readonly InputActionMap m_Interactions;
+    private IInteractionsActions m_InteractionsActionsCallbackInterface;
+    private readonly InputAction m_Interactions_Jump;
+    private readonly InputAction m_Interactions_Attack;
+    public struct InteractionsActions
     {
         private @PlayerActions m_Wrapper;
-        public JumpActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Jump => m_Wrapper.m_Jump_Jump;
-        public InputActionMap Get() { return m_Wrapper.m_Jump; }
+        public InteractionsActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Jump => m_Wrapper.m_Interactions_Jump;
+        public InputAction @Attack => m_Wrapper.m_Interactions_Attack;
+        public InputActionMap Get() { return m_Wrapper.m_Interactions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(JumpActions set) { return set.Get(); }
-        public void SetCallbacks(IJumpActions instance)
+        public static implicit operator InputActionMap(InteractionsActions set) { return set.Get(); }
+        public void SetCallbacks(IInteractionsActions instance)
         {
-            if (m_Wrapper.m_JumpActionsCallbackInterface != null)
+            if (m_Wrapper.m_InteractionsActionsCallbackInterface != null)
             {
-                @Jump.started -= m_Wrapper.m_JumpActionsCallbackInterface.OnJump;
-                @Jump.performed -= m_Wrapper.m_JumpActionsCallbackInterface.OnJump;
-                @Jump.canceled -= m_Wrapper.m_JumpActionsCallbackInterface.OnJump;
+                @Jump.started -= m_Wrapper.m_InteractionsActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_InteractionsActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_InteractionsActionsCallbackInterface.OnJump;
+                @Attack.started -= m_Wrapper.m_InteractionsActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_InteractionsActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_InteractionsActionsCallbackInterface.OnAttack;
             }
-            m_Wrapper.m_JumpActionsCallbackInterface = instance;
+            m_Wrapper.m_InteractionsActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
             }
         }
     }
-    public JumpActions @Jump => new JumpActions(this);
+    public InteractionsActions @Interactions => new InteractionsActions(this);
     public interface IFreeMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
     }
-    public interface IJumpActions
+    public interface IInteractionsActions
     {
         void OnJump(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

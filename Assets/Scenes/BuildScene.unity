@@ -10103,14 +10103,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1281382743}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.79, y: 0.57, z: 1.4048716}
+  m_LocalRotation: {x: -0, y: -0, z: -0.0010890665, w: 0.9999994}
+  m_LocalPosition: {x: 1.56, y: 1.28, z: 1.4048716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1983415380}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.125}
 --- !u!95 &1281382745
 Animator:
   serializedVersion: 4
@@ -10208,10 +10208,10 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.2747841, y: -0.017486334}
+  m_Offset: {x: 1.5661737, y: -0.017486334}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.93929744, y: 0.5338664}
+    pivot: {x: 0.04458914, y: 0.53386664}
     oldSize: {x: 3.0625, y: 2}
     newSize: {x: 3.0625, y: 2}
     adaptiveTilingThreshold: 0.5
@@ -10219,7 +10219,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.1440048, y: 1.327887}
+  m_Size: {x: 2.744561, y: 1.27}
   m_EdgeRadius: 0
 --- !u!50 &1281382749
 Rigidbody2D:
@@ -11163,7 +11163,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518511612}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.37, y: 0.56, z: 1.4048716}
+  m_LocalPosition: {x: -3.34, y: 1.2, z: 1.4048716}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12252,8 +12252,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1710474270}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.45, y: 0.7, z: 1.4048716}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.67, y: 1.21, z: 1.3614576}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25609,7 +25609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   freeMovementSpeed: 700
-  strictMovementSpeed: 20
+  strictMovementSpeed: 10
   turnSpeed: 600
   jumpStrength: 3
   bodySegments:
@@ -25632,6 +25632,7 @@ MonoBehaviour:
   tunnelCollider: {fileID: 77232614}
   rayLength: 3
   mainCamera: {fileID: 9171533831183056881}
+  rootManAnimator: {fileID: 2132295632}
 --- !u!4 &5072918488158228175
 Transform:
   m_ObjectHideFlags: 0
@@ -25710,7 +25711,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9171533831183056880}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -16.86, y: -8.08, z: -10}
+  m_LocalPosition: {x: -21.09, y: -7.37, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -25918,7 +25919,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9171533832087798856}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.86, y: -8.08, z: -10}
+  m_LocalPosition: {x: -21.09, y: -7.37, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
